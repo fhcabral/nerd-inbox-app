@@ -6,9 +6,11 @@ type Props = {
   label?: string;
   placeholder?: string;
   style?: StyleProp<ViewStyle>;
+  onChangeText?: (text: string) => void;
+  value?: string;
 };
 
-export default function TextInputComponent({ label, placeholder, style }: Props) {
+export default function TextInputComponent({ label, placeholder, style, onChangeText, value }: Props) {
   const { colors } = useTheme();
 
   return (
@@ -18,7 +20,8 @@ export default function TextInputComponent({ label, placeholder, style }: Props)
         style={styles.input(colors)}
         placeholder={placeholder || "Digite algo..."}
         placeholderTextColor={colors.textMuted}
-        onChangeText={() => {}}
+        onChangeText={onChangeText}
+        value={value}
       />
     </View>
   );

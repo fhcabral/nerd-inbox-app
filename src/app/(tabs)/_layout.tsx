@@ -1,8 +1,11 @@
+import { useAuth } from "@/src/app/(auth)/authProvider";
 import { SafeScreen } from "@/src/components/safeAreaScreen";
-import { Tabs } from "expo-router";
-
+import { Redirect, Tabs } from "expo-router";
 
 export default function TabsLayout() {
+  const { isLogged } = useAuth();
+  if (!isLogged) return <Redirect href="/login" />;
+  
   return (
     <SafeScreen>
     <Tabs>
