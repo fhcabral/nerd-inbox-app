@@ -32,12 +32,13 @@
       [
         "expo-splash-screen",
         {
-          "image": "./src/assets/images/splash-screen.png",
+          "image": "./src/assets/images/nerdLogo.png",
           "resizeMode": "cover",
           "backgroundColor": "#0A0921",
           "dark": {
             "backgroundColor": "#0A0921"
-          }
+          },
+          "imageWidth": 200
         }
       ]
     ],

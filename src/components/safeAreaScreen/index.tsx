@@ -9,7 +9,7 @@ type SafeScreenProps = {
 };
 
 export function SafeScreen({ children, style }: SafeScreenProps) {
-  const { colors, layout } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <SafeAreaView
@@ -17,7 +17,6 @@ export function SafeScreen({ children, style }: SafeScreenProps) {
         {
           flex: 1,
           backgroundColor: colors.bg,
-          paddingHorizontal: layout.screen.padding,
         },
         style,
       ]}
