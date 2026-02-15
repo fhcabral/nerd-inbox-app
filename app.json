@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "nerd-inbox-app",
+    "name": "Nerd Inbox App",
     "slug": "nerd-inbox-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.fhcabral.nerdinboxapp"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,14 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": { 
+        "root": "./src/app/"
+      },
+      "eas": {
+        "projectId": "a467fa8d-d1cc-4fc6-9c71-8ba56573a076"
+      }
     }
   }
 }
