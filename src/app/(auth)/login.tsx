@@ -5,8 +5,8 @@ import TextInputComponent from '@/src/components/textInput';
 import { useTheme } from '@/src/components/theme/useTheme';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Image } from 'react-native';
-import { useLoginModel } from './login.model';
-import { styles } from './styles';
+import useLoginModel from './login.model';
+import styles from './styles';
 
 export default function Auth() {
   const { colors } = useTheme();

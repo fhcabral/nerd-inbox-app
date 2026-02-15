@@ -1,5 +1,5 @@
-import { useAuth } from "@/src/app/(auth)/authProvider";
 import { SafeScreen } from "@/src/components/safeAreaScreen";
+import { useAuth } from "@/src/contexts/authProvider";
 import { Redirect, Tabs } from "expo-router";
 
 export default function TabsLayout() {

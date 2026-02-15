@@ -1,9 +1,8 @@
-import { useAuth } from "@/src/app/(auth)/authProvider";
 import { showToast } from "@/src/components/toasts";
+import { useAuth } from "@/src/contexts/authProvider";
 import { useState } from "react";
 
-
-export const useLoginModel = () => {
+const useLoginModel = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const { login } = useAuth();
@@ -40,3 +39,5 @@ export const useLoginModel = () => {
         handleLogin
     }
 }
+
+export default useLoginModel;

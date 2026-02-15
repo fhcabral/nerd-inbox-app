@@ -1,4 +1,4 @@
-import { AuthProvider } from "@/src/app/(auth)/authProvider";
+import { AuthProvider } from "@/src/contexts/authProvider";
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";

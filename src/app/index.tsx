@@ -1,4 +1,4 @@
-import { useAuth } from "@/src/app/(auth)/authProvider";
+import { useAuth } from "@/src/contexts/authProvider";
 import { Redirect } from "expo-router";
 
 export default function Index() {
