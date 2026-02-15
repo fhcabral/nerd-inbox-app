@@ -2,7 +2,8 @@ import Button from "@/src/components/button";
 import Header from "@/src/components/header";
 import KpiCard from "@/src/components/kpiCard";
 import { SafeScreen } from "@/src/components/safeAreaScreen";
-import { useTheme } from "@/src/components/theme/useTheme";
+import { Screen } from "@/src/components/screen";
+import { useTheme } from "@/src/contexts/theme/useTheme";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
@@ -74,10 +75,9 @@ export default function Home() {
 
   return (
     <SafeScreen>
-      <View style={{margin: 14}}>
+      <Screen>
         <Header />
         <KpiCard data={kpis} />
-
         {/* CTA */}
         <View style={{ marginTop: layout.space[4] }}>
           <Button
@@ -92,7 +92,7 @@ export default function Home() {
             style={{ marginTop: layout.space[3] }}
           />
         </View>
-      </View>
+      </Screen>
 
     </SafeScreen>
   );

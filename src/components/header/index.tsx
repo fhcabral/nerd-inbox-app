@@ -1,7 +1,7 @@
 import Foundation from "@expo/vector-icons/Foundation";
 import { View } from 'react-native';
+import { useTheme } from '../../contexts/theme/useTheme';
 import Text from '../text';
-import { useTheme } from '../theme/useTheme';
 import styles from './styles';
 
 export default function Header() {

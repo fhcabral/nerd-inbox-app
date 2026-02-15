@@ -1,4 +1,4 @@
-import { useTheme } from "@/src/components/theme/useTheme";
+import { useTheme } from "@/src/contexts/theme/useTheme";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
 import { Pressable, View } from "react-native";

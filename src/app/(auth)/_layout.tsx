@@ -1,5 +1,5 @@
 import { SafeScreen } from "@/src/components/safeAreaScreen";
-import { useAuth } from "@/src/contexts/authProvider";
+import { useAuth } from "@/src/contexts/auth/authProvider";
 import { Redirect, Stack } from "expo-router";
 
 export default function AuthLayout() {

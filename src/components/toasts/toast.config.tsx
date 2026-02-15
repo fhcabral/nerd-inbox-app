@@ -1,7 +1,7 @@
+import { UseThemeReturn } from "@/src/contexts/theme/useTheme";
 import React from "react";
 import type { ToastConfig } from "react-native-toast-message";
 import { BaseToast } from "react-native-toast-message";
-import type { UseThemeReturn } from "../theme/useTheme";
 
 function buildToast(
   theme: UseThemeReturn,

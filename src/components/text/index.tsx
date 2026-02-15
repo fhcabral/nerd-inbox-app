@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Text as RNText, StyleProp, TextStyle } from "react-native";
-import { useTheme } from "../theme/useTheme";
+import { useTheme } from "../../contexts/theme/useTheme";
 
 type TextVariant =
   | "display"

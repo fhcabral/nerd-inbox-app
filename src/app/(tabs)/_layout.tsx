@@ -1,10 +1,22 @@
 import { CustomTabBar } from "@/src/components/customTabBar";
 import { SafeScreen } from "@/src/components/safeAreaScreen";
-import { useAuth } from "@/src/contexts/authProvider";
+import { useAuth } from "@/src/contexts/auth/authProvider";
 import { Redirect, Tabs } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 
 export default function TabsLayout() {
-  const { isLogged } = useAuth();
+  const { isLogged, isReady } = useAuth();
+
+
+  if (!isReady) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+
   if (!isLogged) return <Redirect href="/login" />;
 
   return (

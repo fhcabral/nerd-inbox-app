@@ -1,6 +1,6 @@
 import { View } from 'react-native';
+import { useTheme } from '../../contexts/theme/useTheme';
 import Text from '../text';
-import { useTheme } from '../theme/useTheme';
 
 export default function KpiCard({data}: any) {
     const { layout, colors } = useTheme()

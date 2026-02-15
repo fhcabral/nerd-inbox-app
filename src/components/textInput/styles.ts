@@ -1,6 +1,6 @@
 import { layout } from "@/src/constants/layout";
 import type { TextStyle, ViewStyle } from "react-native";
-import type { ThemeColors } from "../theme/theme";
+import type { ThemeColors } from "../../contexts/theme/theme";
 
 export const styles = {
   container: {

@@ -2,7 +2,7 @@ import Button from '@/src/components/button';
 import { Screen } from '@/src/components/screen';
 import Text from '@/src/components/text';
 import TextInputComponent from '@/src/components/textInput';
-import { useTheme } from '@/src/components/theme/useTheme';
+import { useTheme } from '@/src/contexts/theme/useTheme';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Image } from 'react-native';
 import useLoginModel from './login.model';

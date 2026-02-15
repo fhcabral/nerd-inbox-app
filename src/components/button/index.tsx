@@ -1,4 +1,4 @@
-import { useTheme } from "@/src/components/theme/useTheme";
+import { useTheme } from "@/src/contexts/theme/useTheme";
 import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
 import { styles } from "./styles";
 

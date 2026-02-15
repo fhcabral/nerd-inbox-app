@@ -1,5 +1,5 @@
 import { StyleProp, Text, TextInput, View, ViewStyle } from "react-native";
-import { useTheme } from "../theme/useTheme";
+import { useTheme } from "../../contexts/theme/useTheme";
 import { styles } from "./styles";
 
 type Props = {

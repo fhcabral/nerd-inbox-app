@@ -1,6 +1,6 @@
 import { layout } from "@/src/constants/layout";
 import { StyleSheet, type TextStyle, type ViewStyle } from "react-native";
-import { ThemeColors } from "../theme/theme";
+import { ThemeColors } from "../../contexts/theme/theme";
 
 type Variant = "primary" | "secondary" | "ghost";
 

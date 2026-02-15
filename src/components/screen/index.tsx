@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { StyleProp, View, ViewStyle } from "react-native";
-import { useTheme } from "../theme/useTheme";
+import { KeyboardAvoidingView, ScrollView, StyleProp, View, ViewStyle } from "react-native";
+import { useTheme } from "../../contexts/theme/useTheme";
 
 type ScreenProps = {
   children: ReactNode;
@@ -11,17 +11,21 @@ export function Screen({ children, style }: ScreenProps) {
   const { colors, layout } = useTheme();
 
   return (
-    <View
-      style={[
-        {
-          flex: 1,
-          backgroundColor: colors.bg,
-          paddingHorizontal: layout.screen.padding,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
+    <KeyboardAvoidingView>
+      <ScrollView>
+        <View
+          style={[
+            {
+              flex: 1,
+              backgroundColor: colors.bg,
+              paddingHorizontal: layout.screen.padding,
+            },
+            style,
+          ]}
+        >
+          {children}
+        </View>
+      </ScrollView >
+    </KeyboardAvoidingView>
   );
 }
