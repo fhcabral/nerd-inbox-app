@@ -8,16 +8,28 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   onChangeText?: (text: string) => void;
   value?: string;
+  variant?: "default" | "plain"; // 👈 novo
+  inputStyle?: any; // se quiser refinar depois
 };
 
-export default function TextInputComponent({ label, placeholder, style, onChangeText, value }: Props) {
+export default function TextInputComponent({
+  label,
+  placeholder,
+  style,
+  onChangeText,
+  value,
+  variant = "default",
+  inputStyle,
+}: Props) {
   const { colors } = useTheme();
 
+  const containerStyle = variant === "plain" ? null : styles.container;
+
   return (
-    <View style={[styles.container, style]}>
+    <View style={[containerStyle, style]}>
       {label && <Text style={styles.label(colors)}>{label}</Text>}
       <TextInput
-        style={styles.input(colors)}
+        style={[styles.input(colors), inputStyle]}
         placeholder={placeholder || "Digite algo..."}
         placeholderTextColor={colors.textMuted}
         onChangeText={onChangeText}

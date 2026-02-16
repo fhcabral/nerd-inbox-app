@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { KeyboardAvoidingView, ScrollView, StyleProp, View, ViewStyle } from "react-native";
+import { Platform, StyleProp, ViewStyle } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useTheme } from "../../contexts/theme/useTheme";
 
 type ScreenProps = {
@@ -11,21 +12,22 @@ export function Screen({ children, style }: ScreenProps) {
   const { colors, layout } = useTheme();
 
   return (
-    <KeyboardAvoidingView>
-      <ScrollView>
-        <View
-          style={[
-            {
-              flex: 1,
-              backgroundColor: colors.bg,
-              paddingHorizontal: layout.screen.padding,
-            },
-            style,
-          ]}
-        >
-          {children}
-        </View>
-      </ScrollView >
-    </KeyboardAvoidingView>
+    <KeyboardAwareScrollView
+      style={{ flex: 1, backgroundColor: colors.bg }}
+      contentContainerStyle={[
+        {
+          flexGrow: 1,
+          backgroundColor: colors.bg,
+          paddingHorizontal: layout.screen.padding,
+        },
+        style,
+      ]}
+      enableOnAndroid
+      keyboardShouldPersistTaps="handled"
+      extraScrollHeight={Platform.OS === "ios" ? 12 : 24}
+      overScrollMode="never"
+    >
+      {children}
+    </KeyboardAwareScrollView>
   );
 }

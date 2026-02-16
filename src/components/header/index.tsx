@@ -1,22 +1,21 @@
-import Foundation from "@expo/vector-icons/Foundation";
 import { View } from 'react-native';
 import { useTheme } from '../../contexts/theme/useTheme';
 import Text from '../text';
-import styles from './styles';
 
-export default function Header() {
+interface HeaderProps {
+  title: string;
+  footer: string
+}
+
+export default function Header({title, footer}: HeaderProps) {
     const { layout, colors } = useTheme();
 
     return (
-        <View style={[styles.container, { marginBottom: layout.space[5] }]}>
-            <Text variant="heading">Resumo</Text>
-            <View 
-                onTouchStart={() => alert('broxa')} 
-                style={styles.filterContainer}
-            >
-                <Text variant="mono" style={styles.filterText}>Filtrar</Text>
-                <Foundation name="filter" size={28} color={colors.primary} />
-            </View>
-        </View>
+      <View style={{ marginBottom: layout.space[4] }}>
+        <Text variant="heading">{title}</Text>
+        <Text variant="caption" style={{ color: colors.textMuted, marginTop: layout.space[1] }}>
+          {footer}
+        </Text>
+      </View>
     );
 }

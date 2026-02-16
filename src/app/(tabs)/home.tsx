@@ -76,9 +76,8 @@ export default function Home() {
   return (
     <SafeScreen>
       <Screen>
-        <Header />
+        <Header title={'Resumo'} footer={'Veja seus insights principais'} />
         <KpiCard data={kpis} />
-        {/* CTA */}
         <View style={{ marginTop: layout.space[4] }}>
           <Button
             title="Nova venda"

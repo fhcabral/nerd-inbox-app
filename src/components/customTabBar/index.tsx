@@ -59,9 +59,9 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
 
   const animateFAB = () => {
     scale.value = withSequence(
-      withSpring(0.9, { damping: 10, stiffness: 300 }), // aperta
-      withSpring(1.2, { damping: 8, stiffness: 250 }),  // solta e expande
-      withSpring(1, { damping: 15, stiffness: 400 })    // volta ao normal
+      withSpring(0.9, { damping: 10, stiffness: 300 }),
+      withSpring(1.2, { damping: 8, stiffness: 250 }),
+      withSpring(1, { damping: 15, stiffness: 400 })
     );
 
     rotate.value = withSequence(
@@ -69,7 +69,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
         duration: 600, 
         easing: Easing.bezier(0.25, 0.1, 0.25, 1) 
       }),
-      withTiming(0, { duration: 0 }) // reseta para a próxima vez
+      withTiming(0, { duration: 0 })
     );
 
     progress.value = withSequence(
@@ -239,7 +239,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
                 width: FAB_SIZE,
                 height: FAB_SIZE,
                 borderRadius: FAB_SIZE / 2,
-                backgroundColor: "#000",
+                backgroundColor: colors.primary,
                 alignItems: "center",
                 justifyContent: "center",
 
