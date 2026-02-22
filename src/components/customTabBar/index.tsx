@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
   withTiming
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Entypo from "@expo/vector-icons/Entypo";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -30,6 +31,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
   const FAB_SIZE = 56;
 
   const salesIndex = state.routes.findIndex((r) => r.name === "sales");
+  const insets = useSafeAreaInsets();
 
   const sideRoutes = state.routes.filter((_, i) => i !== salesIndex);
   const leftRoutes = sideRoutes.slice(0, Math.ceil(sideRoutes.length / 2));
@@ -124,30 +126,30 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
 
   return (
     <View
-      onLayout={handleContainerLayout}
-      style={{
-        position: "absolute",
-        left: layout.space[4],
-        right: layout.space[4],
-        bottom: layout.space[2],
+  onLayout={handleContainerLayout}
+  style={{
+    height: TAB_HEIGHT,
+    alignSelf: "center",
 
-        height: TAB_HEIGHT,
-        borderRadius: layout.radius.pill,
-        backgroundColor: colors.elevated,
-        borderTopWidth: 0,
+    width: "90%",
+    bottom: Math.max(0, insets.bottom - 100),
 
-        shadowColor: colors.glow,
-        shadowOpacity: 0.35,
-        shadowRadius: 14,
-        shadowOffset: { width: 0, height: 8 },
-        elevation: 10,
+    borderRadius: layout.radius.pill,
+    backgroundColor: colors.elevated,
+    borderTopWidth: 0,
 
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: layout.space[5],
-      }}
-    >
+    shadowColor: colors.glow,
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 10,
+
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: layout.space[5],
+  }}
+>
       {/* LADO ESQUERDO */}
       <View style={{ flexDirection: "row", gap: layout.space[6] }}>
         {leftRoutes.map((route) => {

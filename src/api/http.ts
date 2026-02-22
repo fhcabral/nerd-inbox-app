@@ -1,10 +1,12 @@
-import { clearTokens, getTokens, setAccessToken } from "@/src/contexts/auth/tokenStorage";
-import axios from "axios";
+import { clearTokens, getTokens, setAccessToken, setTokens } from "@/src/contexts/auth/tokenStorage";
+import axios, { AxiosResponse } from "axios";
 
 export const api = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.3.21:3000/api/v1",
   timeout: 10000,
 });
+
+export const handleResponse = (res: AxiosResponse) => res.data;
 
 let refreshPromise: Promise<string> | null = null;
 
@@ -50,10 +52,18 @@ api.interceptors.response.use(
             { timeout: 10000 }
           );
 
-          const newAccessToken = r.data?.data?.accessToken as string | undefined;
+          const payload = r.data?.data;
+          const newAccessToken = payload?.accessToken as string | undefined;
+          const newRefreshToken = payload?.refreshToken as string | undefined;
+
           if (!newAccessToken) throw new Error("Missing accessToken on refresh");
 
-          await setAccessToken(newAccessToken);
+          if (newRefreshToken) {
+            await setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+          } else {
+            await setAccessToken(newAccessToken);
+          }
+
           return newAccessToken;
         })();
 

@@ -18,6 +18,7 @@ const useLoginModel = () => {
   const { login } = useAuth();
 
   const validateEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const formatToLowCase = (v: string) => v.toLowerCase();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -32,7 +33,7 @@ const useLoginModel = () => {
 
     try {
       const { data } = await api.post<LoginResponse>("/auth/login", {
-        email,
+        email: formatToLowCase(email),
         password,
       });
 

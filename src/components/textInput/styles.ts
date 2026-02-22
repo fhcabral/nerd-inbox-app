@@ -4,7 +4,7 @@ import type { ThemeColors } from "../../contexts/theme/theme";
 
 export const styles = {
   container: {
-    margin: 10,
+    flex: 1
   } satisfies ViewStyle,
 
   input: (c: ThemeColors): TextStyle => ({
