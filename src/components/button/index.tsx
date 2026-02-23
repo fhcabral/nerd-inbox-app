@@ -1,5 +1,5 @@
 import { useTheme } from "@/src/contexts/theme/useTheme";
-import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
 import { styles } from "./styles";
 
 type Variant = "primary" | "secondary" | "ghost";
@@ -11,6 +11,7 @@ type ButtonProps = {
   variant?: Variant;
   style?: StyleProp<ViewStyle>;
   icon?: React.ReactNode;
+  isLoading?: boolean;
 };
 
 export default function Button({
@@ -19,7 +20,8 @@ export default function Button({
   disabled = false,
   variant = "primary",
   style,
-  icon
+  icon,
+  isLoading = false,
 }: ButtonProps) {
   const { colors } = useTheme();
 
@@ -42,10 +44,14 @@ export default function Button({
         style,
       ]}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+      {!isLoading ? <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
         <Text style={textStyle}>{title}</Text>
         {icon && icon}  
-      </View>
+      </View> : <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={textStyle}>{title}</Text>
+        <ActivityIndicator color={colors.accent}/>
+        {icon && icon}  
+      </View>}
     </Pressable>
   );
 }

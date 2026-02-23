@@ -10,6 +10,7 @@ type ProductEntity = {
   updatedAt: Date;
   deletedAt: Date | null;
   images: ProductImageEntity[];
+  description?: string;
 };
 
 type ProductImageEntity = {

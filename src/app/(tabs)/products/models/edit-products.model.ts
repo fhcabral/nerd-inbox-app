@@ -4,26 +4,40 @@ import { Alert } from "react-native";
 
 import { api, handleResponse } from "@/src/api/http";
 import type { DefaultResponse } from "@/src/api/types";
+import { showToast } from "@/src/components/toasts";
 import { useTheme } from "@/src/contexts/theme/useTheme";
+import { handleError } from "@/src/errors/handlerError";
 import { formatInputNumber, isPaginated, parseNumberBR } from "@/src/helpers/helper"; // ajuste imports conforme teu projeto
 import type { ProductEntity } from "../types";
+import type { PickedImage } from "./new-products.model";
 
 const useEditProductModel = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors, layout } = useTheme();
+  const [images, setImages] = useState<PickedImage[]>([]);
+  const [newImages, setNewImages] = useState<PickedImage[]>([]);
 
   const productId = useMemo(() => (typeof id === "string" ? id : ""), [id]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
 
   const [name, setName] = useState("");
   const [cost, setCost] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [description, setDescription] = useState("");
+
+  const [initialData, setInitialData] = useState({
+    name: "",
+    cost: "",
+    price: "",
+    stock: "",
+    description: "",
+  });
 
   const canSave = name.trim().length >= 2 && !loading && !saving && !deleting;
 
@@ -42,6 +56,7 @@ const useEditProductModel = () => {
       }
 
       const product = res.data;
+      if (product?.images) setImages(product.images.map(img => ({ uri: img.url, id: img.id })));
 
       setName(product.name ?? "");
       setCost(formatInputNumber(Number(product.cost)));
@@ -52,16 +67,69 @@ const useEditProductModel = () => {
         )
       );
       setDescription((product as any).description ?? "");
+
+      setInitialData({
+        name: product.name,
+        cost: formatInputNumber(Number(product.cost)),
+        price: formatInputNumber(Number(product.price)),
+        stock: formatInputNumber(
+          typeof product.stock === "number" ? product.stock : Number(product.stock)
+        ),
+        description: product.description ?? "",
+      });
     } catch (e: any) {
-      Alert.alert("Erro", e?.message ?? "Não foi possível carregar o produto.");
+      handleError(e)
     } finally {
       setLoading(false);
     }
   }
 
+  async function uploadProductImages(productId: string, imgs: PickedImage[]) {
+    await Promise.all(
+      imgs.map(async (img, index) => {
+        const form = new FormData();
+
+        form.append("file", {
+          uri: img.uri,
+          name: img.name ?? `product-${productId}-${index}.jpg`,
+          type: img.type ?? "image/jpeg",
+        } as any);
+
+        await api.post(`/products/${productId}/images`, form, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      })
+    );
+  }
+
+
+  async function deleteImage(imageId: string) {
+    try {
+      await api.delete(`/products/${productId}/images/${imageId}`);
+      setImages((prev) => prev.filter((i) => i.id !== imageId));
+      showToast("success", "Imagem removida.");
+    } catch (e) {
+      handleError(e);
+    }
+  }
+
+  async function reorderImages(orderIds: string[]) {
+    try {
+      await api.put(`/products/${productId}/images/reorder`, { orderIds });
+
+      setImages((prev) => {
+        const map = new Map(prev.map((i) => [i.id, i]));
+        return orderIds.map((id) => map.get(id)!).filter(Boolean);
+      });
+
+      showToast("success", "Ordem das imagens atualizada.");
+    } catch (e) {
+      handleError(e);
+    }
+  }
+
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   async function onSave() {
@@ -70,15 +138,15 @@ const useEditProductModel = () => {
     const costValue = cost ? parseNumberBR(cost) : null;
 
     if (price && priceValue === null) {
-      Alert.alert("Preço inválido", "Digite um valor válido. Ex: 19,90");
+      showToast("info", "Digite um valor válido. Ex: 19,90");
       return;
     }
     if (cost && costValue === null) {
-      Alert.alert("Custo inválido", "Digite um valor válido. Ex: 10,00");
+      showToast("info", "Digite um valor válido. Ex: 10,00");
       return;
     }
     if (stock && stockValue === null) {
-      Alert.alert("Estoque inválido", "Digite um valor válido. Ex: 10");
+      showToast("info", "Digite um valor válido. Ex: 10");
       return;
     }
 
@@ -99,6 +167,14 @@ const useEditProductModel = () => {
 
       if (!isPaginated<ProductEntity>(res.data)) {
         const updated = res.data;
+        if (newImages.length > 0) {
+          try {
+            await uploadProductImages(updated.id, newImages);
+            setNewImages([]);
+          } catch (e) {
+            handleError(e);
+          }
+        }
 
         setName(updated.name ?? name);
         setCost(formatInputNumber(Number(updated.cost)));
@@ -111,12 +187,12 @@ const useEditProductModel = () => {
         setDescription((updated as any).description ?? description);
       }
 
-      Alert.alert("Salvo", res.message ?? "Produto atualizado com sucesso.");
+      showToast("success", res.message ?? "Produto atualizado com sucesso.");
     } catch (e: any) {
-      const msg = e?.response?.data?.message ?? e?.message ?? "Não foi possível salvar.";
-      Alert.alert("Erro", msg);
+      handleError(e)
     } finally {
       setSaving(false);
+      await load();
     }
   }
 
@@ -134,18 +210,36 @@ const useEditProductModel = () => {
               await api.delete(`/products/${productId}`)
             ) as DefaultResponse<unknown>;
 
-            Alert.alert("Ok", res.message ?? "Produto deletado.");
+            showToast("success", res.message ?? "Produto deletado.");
             router.replace("/products");
           } catch (e: any) {
             const msg =
               e?.response?.data?.message ?? e?.message ?? "Não foi possível deletar.";
-            Alert.alert("Erro", msg);
+            showToast("error", msg);
           } finally {
             setDeleting(false);
           }
         },
       },
     ]);
+  }
+
+  const handleBack = () => {
+    const isDirty =
+      name !== initialData.name ||
+      cost !== initialData.cost ||
+      price !== initialData.price ||
+      stock !== initialData.stock ||
+      description !== initialData.description;
+
+    if (isDirty) {
+      Alert.alert("Sair sem salvar?", "Você tem alterações não salvas. Tem certeza que deseja sair?", [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Sair", style: "destructive", onPress: () => router.back() },
+      ]);
+    } else {
+      router.back();
+    }
   }
 
   return {
@@ -160,6 +254,8 @@ const useEditProductModel = () => {
     deleting,
     canSave,
     router,
+    canEdit,
+    setCanEdit,
 
     name,
     setName,
@@ -171,12 +267,18 @@ const useEditProductModel = () => {
     setStock,
     description,
     setDescription,
+    images,
+    deleteImage,
+    reorderImages,
+    newImages,
+    setNewImages,
 
     // actions
     reload: load,
     onSave,
     onDelete,
     onBack: () => router.back(),
+    handleBack
   };
 };
 

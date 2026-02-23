@@ -2,6 +2,7 @@ import { api, handleResponse } from "@/src/api/http";
 import type { DefaultResponse, PaginatedResponse } from "@/src/api/types";
 import { useTheme } from "@/src/contexts/theme/useTheme";
 import { handleError } from "@/src/errors/handlerError";
+import { isPaginated } from "@/src/helpers/helper";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ProductEntity } from "../types";
@@ -66,7 +67,7 @@ const useProductsModel = () => {
       params.set("page", String(nextPage));
       params.set("limit", String(limit));
       params.set("sort", "createdAt");
-      params.set("order", "ASC");
+      params.set("order", "DESC");
       if (debounced) params.set("search", debounced);
 
       const data = handleResponse(
@@ -74,6 +75,10 @@ const useProductsModel = () => {
       ) as DefaultResponse<ProductEntity>;
 
       if (seq !== requestSeq.current) return;
+
+      if (!isPaginated<ProductEntity>(data.data)) {
+        throw new Error("Unexpected response format");
+      }
 
       const pageData = data.data.data;
       const pageMeta = data.data.meta;

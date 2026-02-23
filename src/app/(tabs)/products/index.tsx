@@ -12,14 +12,10 @@ import { SafeScreen } from "@/src/components/safeAreaScreen";
 import { ScreenList } from "@/src/components/screenList";
 import SearchBar from "@/src/components/searchBar";
 import Text from "@/src/components/text";
-import { useTheme } from "@/src/contexts/theme/useTheme";
-import { useRouter } from "expo-router";
 import useProductsModel from "./models/products.model";
 
 export default function Products() {
-  const {search, setSearch, items, loading, refreshing, loadingMore, meta, onEndReached, onRefresh} = useProductsModel();
-  const { colors, layout } = useTheme();
-  const router = useRouter();
+  const {search, setSearch, items, loading, refreshing, loadingMore, meta, onEndReached, onRefresh, colors, layout, router} = useProductsModel();
   return (
     <SafeScreen>
       <ScreenList >
