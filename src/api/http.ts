@@ -1,3 +1,4 @@
+import { emitUnauthorized } from "@/src/contexts/auth/authEvent";
 import { clearTokens, getTokens, setAccessToken, setTokens } from "@/src/contexts/auth/tokenStorage";
 import axios, { AxiosResponse } from "axios";
 
@@ -75,6 +76,7 @@ api.interceptors.response.use(
       return api(original);
     } catch (e) {
       await clearTokens();
+      emitUnauthorized();
       throw e;
     } finally {
       refreshPromise = null;

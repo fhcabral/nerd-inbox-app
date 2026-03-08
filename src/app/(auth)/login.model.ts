@@ -3,6 +3,7 @@ import { showToast } from "@/src/components/toasts";
 import { useAuth } from "@/src/contexts/auth/authProvider";
 import { handleError } from "@/src/errors/handlerError";
 import { useState } from "react";
+import { Platform } from "react-native";
 
 type LoginResponse = {
   status: "success" | "error";
@@ -32,7 +33,10 @@ const useLoginModel = () => {
     }
 
     try {
-      const { data } = await api.post<LoginResponse>("/auth/login", {
+      const isWeb = Platform.OS === 'web';
+      const loginRoute = isWeb ? "/web/login" : "/auth/login";
+      
+      const { data } = await api.post<LoginResponse>(loginRoute, {
         email: formatToLowCase(email),
         password,
       });

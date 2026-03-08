@@ -5,7 +5,12 @@ import { useRouter } from "expo-router";
 import { Image, Pressable, View } from "react-native";
 import Text from "../text";
 
-const ProductItem = ({ item }: { item: ProductEntity }) => {
+type ProductItemProps = {
+  item: ProductEntity;
+  onPress?: (item: ProductEntity) => void;
+};
+
+const ProductItem = ({ item, onPress }: ProductItemProps) => {
   const { colors, layout } = useTheme();
   const router = useRouter();
 
@@ -30,14 +35,21 @@ const ProductItem = ({ item }: { item: ProductEntity }) => {
           ? colors.warning
           : colors.text;
 
+  const handlePress = () => {
+    if (onPress) {
+      onPress(item);
+      return;
+    }
+
+    router.push({
+      pathname: "/products/[id]",
+      params: { id: item.id },
+    });
+  };
+
   return (
     <Pressable
-      onPress={() =>
-        router.push({
-          pathname: "/products/[id]",
-          params: { id: item.id },
-        })
-      }
+      onPress={handlePress}
       style={({ pressed }) => [
         {
           flexDirection: "row",
@@ -100,4 +112,3 @@ const ProductItem = ({ item }: { item: ProductEntity }) => {
 };
 
 export { ProductItem };
-

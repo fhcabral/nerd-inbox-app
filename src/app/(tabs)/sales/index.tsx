@@ -1,61 +1,124 @@
-import { useRouter } from "expo-router";
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";
 
 import Button from "@/src/components/button";
 import Header from "@/src/components/header";
 import { SafeScreen } from "@/src/components/safeAreaScreen";
-import { Screen } from "@/src/components/screen";
+import { ScreenList } from "@/src/components/screenList";
+import SearchBar from "@/src/components/searchBar";
 import Text from "@/src/components/text";
-import { useTheme } from "@/src/contexts/theme/useTheme";
-
-type SaleRow = {
-  id: string;
-  createdAt: string;
-  customerName?: string | null;
-  totalItems: number;
-  totalValue?: string | null; // deixa string (BRL) por enquanto
-};
-
-const mock: SaleRow[] = [
-  { id: "1", createdAt: "Hoje", customerName: "Isa", totalItems: 3, totalValue: "R$ 129,90" },
-  { id: "2", createdAt: "Ontem", customerName: "Cliente balcão", totalItems: 1, totalValue: "R$ 19,90" },
-];
+import { SaleRow, useSalesModel } from "./models/sales.model";
 
 export default function Sales() {
-  const { colors, layout } = useTheme();
-  const router = useRouter();
-
-  const loading = false;
-  const refreshing = false;
+  const model = useSalesModel();
 
   const renderItem = ({ item }: { item: SaleRow }) => {
+    const statusColors = model.getStatusColors(item.status);
+
     return (
       <View
         style={{
-          padding: layout.space[4],
-          borderRadius: layout.radius.lg,
-          backgroundColor: colors.elevated,
-          borderWidth: layout.borderWidth.hairline,
-          borderColor: colors.border,
-          marginBottom: layout.space[3],
+          position: "relative",
+          padding: model.layout.space[4],
+          borderRadius: model.layout.radius.lg,
+          backgroundColor: model.colors.elevated,
+          borderWidth: model.layout.borderWidth.hairline,
+          borderColor: model.colors.border,
+          marginBottom: model.layout.space[3],
+          paddingTop: model.layout.space[6]
         }}
       >
-        <Text variant="bodyStrong">{item.customerName?.trim() ? item.customerName : "Venda"}</Text>
+        {/* BADGE */}
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
 
-        <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: layout.space[2] }}>
-          <Text variant="caption" style={{ color: colors.textMuted }}>
-            {item.createdAt} • {item.totalItems} item(ns)
+            paddingHorizontal: model.layout.space[3],
+            paddingVertical: 6,
+
+            backgroundColor: statusColors.text,
+
+            borderTopRightRadius: model.layout.radius.lg,
+            borderBottomLeftRadius: model.layout.radius.md,
+
+            elevation: 3,
+            shadowColor: "#000",
+            shadowOpacity: 0.12,
+            shadowRadius: 4,
+            shadowOffset: { width: 0, height: 2 },
+          }}
+        >
+          <Text
+            variant="caption"
+            style={{
+              color: "#fff",
+            }}
+          >
+            {model.formatStatus(item.status)}
           </Text>
-          <Text variant="caption" style={{ color: colors.accent }}>
+        </View>
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+
+            paddingHorizontal: model.layout.space[3],
+            paddingVertical: 6,
+
+            backgroundColor: statusColors.text,
+
+            borderTopRightRadius: model.layout.radius.lg,
+            borderBottomLeftRadius: model.layout.radius.md,
+
+            elevation: 3,
+            shadowColor: "#000",
+            shadowOpacity: 0.12,
+            shadowRadius: 4,
+            shadowOffset: { width: 0, height: 2 },
+          }}
+        >
+          <Text
+            variant="caption"
+            style={{
+              color: "#fff",
+            }}
+          >
+            {model.formatStatus(item.status)}
+          </Text>
+        </View>
+
+        <Text variant="bodyStrong">
+          {item.customerName?.trim() ? item.customerName : "Venda"}
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: model.layout.space[2],
+          }}
+        >
+          <Text variant="caption" style={{ color: model.colors.textMuted }}>
+            {item.createdAt}
+          </Text>
+
+          <Text variant="caption" style={{ color: model.colors.accent }}>
             {item.totalValue ?? "—"}
           </Text>
         </View>
 
-        <View style={{ marginTop: layout.space[3] }}>
+        <View style={{ marginTop: model.layout.space[3] }}>
           <Button
             title="Ver detalhes"
             variant="secondary"
-            onPress={() => router.push({ pathname: "/sales/[id]", params: { id: item.id } })}
+            onPress={() =>
+              model.router.push({
+                pathname: "/sales/[id]",
+                params: { id: item.id },
+              })
+            }
           />
         </View>
       </View>
@@ -63,39 +126,60 @@ export default function Sales() {
   };
 
   return (
-    <SafeScreen style={{ paddingTop: layout.space[5] }}>
-      <Screen>
+    <SafeScreen>
+      <ScreenList>
         <Header title="Vendas" footer="Registre e acompanhe suas vendas" />
 
-        <View style={{ marginBottom: layout.space[4] }}>
-          <Button title="Nova venda" onPress={() => router.push("/sales/new")} />
-        </View>
+          <SearchBar
+            placeholder="Buscar venda..."
+            value={model.search}
+            onChangeText={model.setSearch}
+          />
 
-        {loading ? (
-          <View style={{ paddingTop: layout.space[6], alignItems: "center" }}>
+          <Button style={{ marginBottom: model.layout.space[4] }} title="Nova venda" onPress={() => model.router.push("/sales/new")} />
+
+        {model.loading ? (
+          <View style={{ paddingTop: model.layout.space[6], alignItems: "center" }}>
             <ActivityIndicator />
-            <Text variant="caption" style={{ color: colors.textMuted, marginTop: layout.space[2] }}>
+            <Text
+              variant="caption"
+              style={{ color: model.colors.textMuted, marginTop: model.layout.space[2] }}
+            >
               Carregando vendas…
             </Text>
           </View>
         ) : (
           <FlatList
-            data={mock}
+            data={model.items}
             keyExtractor={(i) => i.id}
             renderItem={renderItem}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {}} />}
+            onEndReached={model.onEndReached}
+            onEndReachedThreshold={0.4}
+            refreshControl={
+              <RefreshControl refreshing={model.refreshing} onRefresh={model.onRefresh} />
+            }
             contentContainerStyle={{ paddingBottom: 120 }}
+            ListFooterComponent={
+              model.loadingMore ? (
+                <View style={{ paddingVertical: model.layout.space[4], alignItems: "center" }}>
+                  <ActivityIndicator />
+                </View>
+              ) : null
+            }
             ListEmptyComponent={
-              <View style={{ paddingTop: layout.space[6], alignItems: "center" }}>
+              <View style={{ paddingTop: model.layout.space[6], alignItems: "center" }}>
                 <Text variant="bodyStrong">Nenhuma venda ainda</Text>
-                <Text variant="caption" style={{ color: colors.textMuted, marginTop: layout.space[2] }}>
+                <Text
+                  variant="caption"
+                  style={{ color: model.colors.textMuted, marginTop: model.layout.space[2] }}
+                >
                   Crie sua primeira venda e adicione itens.
                 </Text>
               </View>
             }
           />
         )}
-      </Screen>
+      </ScreenList>
     </SafeScreen>
   );
 }

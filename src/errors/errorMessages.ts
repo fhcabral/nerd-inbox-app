@@ -15,5 +15,14 @@ export const ERROR_MESSAGES: Record<string | number, string> = {
 };
 
 export const ERROR_TRANSLATE: Record<string | number, string> = {
-  'Invalid credentials': 'Credenciais inválidas'
+  'Invalid credentials': 'Credenciais inválidas',
+  'Invalid refresh token': 'Sessão expirada. Faça login novamente.',
+  'Unauthorized': 'Sessão expirada. Faça login novamente.',
+  'Internal server error': 'Ocorreu um erro no servidor. Tente novamente.',
+  'Sale not found': 'Venda não encontrada.',
+  'Sale item not found': 'Item da venda não encontrado.',
+  'quantity must be > 0': 'A quantidade deve ser maior que zero.',
+  'Sale has no items': 'A venda não possui itens.',
+  'Cannot confirm sale due to stock issues': 'Não é possível confirmar a venda devido a problemas de estoque.',
+  'Only CONFIRMED or PAID sales can be canceled': 'Apenas vendas CONFIRMADAS ou PAGAS podem ser canceladas.',
 }

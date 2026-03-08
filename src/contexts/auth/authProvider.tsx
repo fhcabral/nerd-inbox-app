@@ -1,4 +1,6 @@
+import { subscribeUnauthorized } from "@/src/contexts/auth/authEvent";
 import { clearTokens, getTokens, setTokens } from "@/src/contexts/auth/tokenStorage";
+import { router } from "expo-router";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 type Tokens = { accessToken: string; refreshToken: string };
@@ -28,6 +30,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsReady(true);
     })();
   }, []);
+
+  useEffect(() => {
+  const unsubscribe = subscribeUnauthorized(async () => {
+    setAccessTokenState(null);
+    setRefreshTokenState(null);
+    await clearTokens();
+    router.replace("/login");
+  });
+
+  return () => {
+    unsubscribe();
+  };
+}, []);
 
   const value = useMemo<AuthContextValue>(() => {
     return {

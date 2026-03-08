@@ -4,8 +4,9 @@ import type { ThemeColors } from "../../contexts/theme/theme";
 
 export const styles = {
   container: {
-    flex: 1,
-  } satisfies ViewStyle,
+  width: "100%",
+  flexShrink: 1,
+} satisfies ViewStyle,
 
   label: (c: ThemeColors): TextStyle => ({
     fontSize: 12,

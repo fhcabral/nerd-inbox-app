@@ -21,7 +21,7 @@ function RootInner() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
-      <Toast config={makeToastConfig(theme)} position="bottom" />
+      <Toast config={makeToastConfig(theme)} position="top" />
     </>
   );
 }
